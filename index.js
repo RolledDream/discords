@@ -14,7 +14,7 @@ const client = new Client({
 });
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
-const GUILD_ID = 'YOUR_GUILD_ID';
+const GUILD_ID = '1269653237556969482';
 
 client.once('ready', () => {
   console.log('Discord bot is ready!');
