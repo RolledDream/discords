@@ -42,6 +42,7 @@ app.get('/online-members', async (req, res) => {
     }));
 
     res.json({ onlineMembers: onlineMembersList });
+    console.log(`Found ${onlineMembers.size} online members`);
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
