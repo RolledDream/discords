@@ -1,32 +1,59 @@
 require('dotenv').config(); // 이 줄을 코드의 상단에 추가합니다.
+const express = require('express');
+const { Client, GatewayIntentBits } = require('discord.js');
 
-const Discord = require('discord.js');
-const { GatewayIntentBits } = require('discord.js');
+const app = express();
+const port = 3000; // 원하는 포트 번호로 변경 가능
 
-const client = new Discord.Client({
+const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMembers
   ]
 });
 
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
+const GUILD_ID = 'YOUR_GUILD_ID';
+
+client.once('ready', () => {
+  console.log('Discord bot is ready!');
 });
 
-client.on('messageCreate', msg => {
-  console.log(msg.author);
-  if (msg.content === '이런') {
-    msg.reply('18181818181818181818118181');
-    msg.reply("이 히느야.?");
+app.get('/online-members', async (req, res) => {
+  try {
+    const guild = client.guilds.cache.get(GUILD_ID);
+    if (!guild) {
+      return res.status(404).json({ error: 'Guild not found' });
+    }
+
+    await guild.members.fetch(); // 모든 멤버 정보를 가져옵니다.
+
+    const onlineMembers = guild.members.cache.filter(member => 
+      member.presence?.status === 'online' || 
+      member.presence?.status === 'idle' || 
+      member.presence?.status === 'dnd'
+    );
+
+    const onlineMembersList = onlineMembers.map(member => ({
+      username: member.user.username,
+      discriminator: member.user.discriminator,
+      status: member.presence?.status
+    }));
+
+    res.json({ onlineMembers: onlineMembersList });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-client.login(process.env.DISCORD_TOKEN) // 환경 변수에서 토큰을 읽어옵니다.
-  .then(() => {
-    console.log('Bot logged in successfully');
-  })
-  .catch(err => {
-    console.error('Failed to login:', err);
-  });
+client.login(DISCORD_TOKEN);
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+
+
+
+ 
