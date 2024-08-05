@@ -1,5 +1,7 @@
+require('dotenv').config(); // 이 줄을 코드의 상단에 추가합니다.
+
 const Discord = require('discord.js');
-const { GatewayIntentBits } = require('discord.js')
+const { GatewayIntentBits } = require('discord.js');
 
 const client = new Discord.Client({
   intents: [
@@ -14,20 +16,14 @@ client.on('ready', () => {
 });
 
 client.on('messageCreate', msg => {
-    console.log(msg.author)
-    // console.log(`Message received from: ${msg.author.tag}`);
-    // console.log(`User ID: ${msg.author.id}`);
-    // console.log(`Username: ${msg.author.username}`);
-    // console.log(`Discriminator: ${msg.author.discriminator}`);
-    // console.log(`Avatar URL: ${msg.author.displayAvatarURL()}`);
+  console.log(msg.author);
   if (msg.content === '이런') {
     msg.reply('18181818181818181818118181');
     msg.reply("이 히느야?");
   }
-  
 });
 
-client.login('MTI2OTY0ODk0OTEyMDMzNTkwNA.GNn8VT.A_NpzCdTgddchOt14DIsAEd060Oi_kTAOq4wDs')
+client.login(process.env.DISCORD_TOKEN) // 환경 변수에서 토큰을 읽어옵니다.
   .then(() => {
     console.log('Bot logged in successfully');
   })
