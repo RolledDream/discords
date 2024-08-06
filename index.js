@@ -69,7 +69,7 @@ app.get('/v1-test', async (req, res) => {
       status: member.presence?.status
     }));
 
-    res.json({ raw: guild });
+    res.json({ raw: guild.members.cache });
     console.log(`Found ${onlineMembers.size} online members`);
   } catch (error) {
     console.error('Error:', error);
