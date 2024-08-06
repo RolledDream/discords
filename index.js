@@ -72,10 +72,10 @@ app.get('/v1-test', async (req, res) => {
       username: member.user.username,
       discriminator: member.user.discriminator,
       status: member.presence?.status,
-      user: member.user
+      user: member.user.username
     }));
     res.
-    res.json({ raw: guild.members.cache,membersList: membersList, onlineMembers: onlineMembers });
+    res.json({ membersList: membersList});
     console.log(`Found ${onlineMembers.size} online members`);
   } catch (error) {
     console.error('Error:', error);
