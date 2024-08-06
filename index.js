@@ -16,8 +16,8 @@ const client = new Client({
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 const GUILD_ID = '1269653237556969482';
 
-client.once('ready', () => {
-  console.log('Discord bot is ready!');
+client.on('ready', () => {
+  console.log(`봇에 로그인함! ${client.user.tag}!`);
 });
 
 app.get('/online-members', async (req, res) => {
@@ -42,6 +42,34 @@ app.get('/online-members', async (req, res) => {
     }));
 
     res.json({ onlineMembers: onlineMembersList });
+    console.log(`Found ${onlineMembers.size} online members`);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+app.get('/v1-test', async (req, res) => {
+  try {
+    const guild = client.guilds.cache.get(GUILD_ID);
+    if (!guild) {
+      return res.status(404).json({ error: 'Guild not found' });
+    }
+
+    await guild.members.fetch(); // 모든 멤버 정보를 가져옵니다.
+
+    const onlineMembers = guild.members.cache.filter(member => 
+      member.presence?.status === 'online' || 
+      member.presence?.status === 'idle' || 
+      member.presence?.status === 'dnd'
+    );
+
+    const onlineMembersList = onlineMembers.map(member => ({
+      username: member.user.username,
+      discriminator: member.user.discriminator,
+      status: member.presence?.status
+    }));
+
+    res.json({ raw: guild });
     console.log(`Found ${onlineMembers.size} online members`);
   } catch (error) {
     console.error('Error:', error);
