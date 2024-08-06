@@ -68,8 +68,14 @@ app.get('/v1-test', async (req, res) => {
       discriminator: member.user.discriminator,
       status: member.presence?.status
     }));
-
-    res.json({ raw: guild.members.cache });
+    const membersList = guild.members.cache.map(member => ({
+      username: member.user.username,
+      discriminator: member.user.discriminator,
+      status: member.presence?.status,
+      user: member.user
+    }));
+    res.
+    res.json({ raw: guild.members.cache,membersList: membersList, onlineMembers: onlineMembers });
     console.log(`Found ${onlineMembers.size} online members`);
   } catch (error) {
     console.error('Error:', error);
