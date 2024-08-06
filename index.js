@@ -76,7 +76,9 @@ app.get('/v1-test', async (req, res) => {
         name: member.presence.activities[0].name,
         type: member.presence.activities[0].type
       } : null,
-      user: member.user
+      activities: member.presence?.activities,
+      user: member.user,
+      presence: member.presence
     }));
     res.json({ membersList: membersList });
     console.log(`Found ${onlineMembers.size} online members`);
